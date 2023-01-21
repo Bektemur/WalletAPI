@@ -10,7 +10,7 @@ namespace WalletAPI.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Account { get; set; }
-        public decimal Balance { get; set; }
+        public double Balance { get; set; }
         [ForeignKey(nameof(CustomerId))]
         public int CustomerId { get; set; }
     }

@@ -8,7 +8,7 @@ namespace WalletAPI.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         public DateTime Time { get; set; } = DateTime.UtcNow;
         [ForeignKey("WalletId")]
         public int WalletId { get; set; }

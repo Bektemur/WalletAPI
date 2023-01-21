@@ -11,10 +11,9 @@ namespace WalletAPI.Controllers
         {
             _context = context;
         }
+
+        [HmacAuthorize]
         [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(_context.Operation.ToList());
-        }
+        public IActionResult Get() => Ok(_context.Operation.ToList());
     }
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WalletAPI;
+using WalletAPI.Interface;
+using WalletAPI.Service;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+builder.Services.AddTransient<IHmacValidation, HmacValidatorService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -2,6 +2,6 @@
 {
     public interface IHmacValidation
     {
-        bool Validation(string userId, string digest);
+        bool Validation(string userId, string digest, string request);
     }
 }

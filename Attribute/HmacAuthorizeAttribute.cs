@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
+using System.Text;
 using WalletAPI.Interface;
 using WalletAPI.Service;
 
@@ -31,12 +32,35 @@ namespace WalletAPI
             {
                 context.HttpContext.Request.Headers.TryGetValue("X-Digest", out var headerDigestValue);
                 context.HttpContext.Request.Headers.TryGetValue("X-UserId", out var headerUserIdValue);
-                var isValid = _hmacValidation.Validation(headerUserIdValue, headerDigestValue);
+                var request = ReadBodyAsString(context.HttpContext.Request);
+                var isValid = _hmacValidation.Validation(headerUserIdValue.ToString(), headerDigestValue.ToString(), request);
+                if (!isValid)
+                {
+                    context.Result = new UnauthorizedResult();
+                }
                 
-
             }
-
-
+           
         }
+        private string ReadBodyAsString(HttpRequest request)
+        {
+            var initialBody = request.Body;
+            try
+            {
+                request.EnableBuffering();
+
+                using (StreamReader reader = new (request.Body))
+                {
+                    string text = reader.ReadToEnd();
+                    return text;
+                }
+            }
+            finally
+            {
+                request.Body = initialBody;
+            }
+        }
+
     }
-}
+    }
+

@@ -12,6 +12,5 @@ namespace WalletAPI.Model
         public string LastName { get; set; }
         public string Patronymic { get; set; }
         public string Name { get; set; }
-        public bool IsIdentified { get; set; }
     }
 }

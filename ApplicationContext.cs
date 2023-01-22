@@ -16,13 +16,13 @@ namespace WalletAPI
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            var customer1 = new Customer() { FirstName = "Пётр", LastName = "Сидоров", Patronymic = "Олегович", Name = "Сидоров Пётр Олегович", IsIdentified = true, Id = 1 };
-            var customer2 = new Customer() { FirstName = "Музаффар", LastName = "Усманов", Patronymic = "Шавкатович", Name = "Усманов Музаффар Шавкатович", IsIdentified = false, Id = 2 };
-            var customer3 = new Customer() { FirstName = "Лола", LastName = "Усманова", Patronymic = "Юсуповна", Name = "Усманова Лола Юсуповна", IsIdentified = true, Id = 3 };
-            var customer4 = new Customer() { FirstName = "Надежда", LastName = "Смирнова", Patronymic = "Николаевна", Name = "Смирнова Надежда Николаевна", IsIdentified = false, Id = 4 };
-            var wallet1 = new Wallet() { Name = "Кошелёк 1", Account = "2261684300342121200", Balance = 0,  Id = 1, CustomerId = 1 };
-            var wallet2 = new Wallet() { Name = "Кошелёк 2", Account = "2261684300214141200", Balance = 460, Id = 2, CustomerId = 2 };
-            var wallet3 = new Wallet() { Name = "Кошелёк 2", Account = "2261684300897141200", Balance = 16000, Id = 3, CustomerId = 3 };
+            var customer1 = new Customer() { FirstName = "Пётр", LastName = "Сидоров", Patronymic = "Олегович", Name = "Сидоров Пётр Олегович", Id = 1 };
+            var customer2 = new Customer() { FirstName = "Музаффар", LastName = "Усманов", Patronymic = "Шавкатович", Name = "Усманов Музаффар Шавкатович", Id = 2 };
+            var customer3 = new Customer() { FirstName = "Лола", LastName = "Усманова", Patronymic = "Юсуповна", Name = "Усманова Лола Юсуповна", Id = 3 };
+            var customer4 = new Customer() { FirstName = "Надежда", LastName = "Смирнова", Patronymic = "Николаевна", Name = "Смирнова Надежда Николаевна", Id = 4 };
+            var wallet1 = new Wallet() { Name = "Кошелёк 1", Account = "2261684300342121200", Balance = 0,  Id = 1, CustomerId = 1, IsIdentified = true };
+            var wallet2 = new Wallet() { Name = "Кошелёк 2", Account = "2261684300214141200", Balance = 460, Id = 2, CustomerId = 2, IsIdentified = false };
+            var wallet3 = new Wallet() { Name = "Кошелёк 2", Account = "2261684300897141200", Balance = 16000, Id = 3, CustomerId = 3, IsIdentified = true };
             var operation1 = new Operation() { Amount = 1000, Time = new DateTime(2022, 1, 15),  Id = 1, WalletId = 3 };
             var operation2 = new Operation() { Amount = 2000, Time = new DateTime(2023, 1, 10),  Id = 2, WalletId = 3 };
             var operation3 = new Operation() { Amount = 1000, Time = new DateTime(2023, 1, 10),  Id = 3, WalletId = 3 };

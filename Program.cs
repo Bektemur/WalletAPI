@@ -24,6 +24,7 @@ builder.Services.Configure<IISServerOptions>(options =>
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 builder.Services.AddTransient<IHmacValidation, HmacValidatorService>();
+builder.Services.AddTransient<IWalletService, WalletService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

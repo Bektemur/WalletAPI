@@ -9,16 +9,19 @@ namespace WalletAPI.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly IWalletService _walletService;
-        public WalletController(ApplicationContext context, IWalletService walletService)
+        private readonly ILogger<WalletController> _logger;
+        public WalletController(ApplicationContext context, IWalletService walletService, ILogger<WalletController> logger)
         {
             _context = context;
-            _walletService= walletService;
+            _walletService = walletService;
+            _logger = logger;
         }
 
         [HmacAuthorize]
         [HttpGet("Check")]
         public IActionResult CheckAccount(string account)
         {
+            _logger.LogInformation(account);
             var accounts = _context.Wallet.Where(v => v.Account == account).FirstOrDefault();
             if (accounts == null)
             {
@@ -30,6 +33,7 @@ namespace WalletAPI.Controllers
         [HttpPost("Replenishment")]
         public IActionResult ReplenishmentAccount(string account, double amount)
         {
+            _logger.LogInformation(account, amount);
             var response = _walletService.ReplenishmentAccount(account, amount);
             if (response.IsSuccess)
             {
@@ -47,6 +51,7 @@ namespace WalletAPI.Controllers
         {
             try
             {
+                _logger.LogInformation(currentDate.ToShortDateString());
                 var current = new DateTime(currentDate.Year, currentDate.Month, 1);
                 var accounts = _context.Operation.Where(v => v.Time >= current && v.Time <= currentDate);
                 var amount = accounts.Sum(v => v.Amount);
@@ -64,15 +69,17 @@ namespace WalletAPI.Controllers
             
         }
 
+        [HmacAuthorize]
         [HttpGet("GetBalance")]
         public IActionResult GetBalance(string account)
         {
+            _logger.LogInformation(account);
             var accounts = _context.Wallet.Where(v => v.Account == account).FirstOrDefault();
             if (accounts == null)
             {
                 return NotFound();
             }
-            return Ok(new Response() { IsSuccess = true, Message = accounts.Balance.ToString() });
+            return Ok(new Response() { IsSuccess = true, Message = "Баланс = " + accounts.Balance.ToString() });
         }
 
     }

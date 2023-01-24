@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using WalletAPI;
 using WalletAPI.Interface;
 using WalletAPI.Service;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +21,18 @@ builder.Services.Configure<IISServerOptions>(options =>
 {
     options.AllowSynchronousIO = true;
 });
+
+
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 builder.Services.AddTransient<IHmacValidation, HmacValidatorService>();
 builder.Services.AddTransient<IWalletService, WalletService>();
+builder.Host.UseSerilog();
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

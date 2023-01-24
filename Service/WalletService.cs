@@ -8,14 +8,17 @@ namespace WalletAPI.Service
     public class WalletService : IWalletService
     {
         private readonly ApplicationContext _context;
-        public WalletService(ApplicationContext context)
+        private readonly ILogger _logger;
+        public WalletService(ApplicationContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
         public Response ReplenishmentAccount(string account, double amount)
         {
             try
             {
+                _logger.LogInformation(account, amount);
                 double balance = 0;
                 if (string.IsNullOrWhiteSpace(account))
                 {

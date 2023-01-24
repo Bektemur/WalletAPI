@@ -3,19 +3,21 @@ using System.Security.Cryptography;
 using System.Text;
 using WalletAPI.Interface;
 using WalletAPI.Model;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WalletAPI.Service
 {
     public class HmacValidatorService : IHmacValidation
     {
         private readonly ApplicationContext _context;
+        //private readonly Logger<HmacValidatorService> _logger;
         public HmacValidatorService(ApplicationContext context)
         {
             _context = context;
+            //_logger = logger;
         }
         public bool Validation(string userId, string digest, string request)
         {
+           // _logger.LogInformation(userId, digest, request);
             var hash = GetHashSha1(request);
             var client = GetCustomer(userId);
             if (hash.Equals(digest) && client != null)
@@ -31,7 +33,7 @@ namespace WalletAPI.Service
             {
                 return string.Empty;
             }
-            byte[] message = System.Text.Encoding.ASCII.GetBytes(request);
+            byte[] message = System.Text.Encoding.UTF8.GetBytes(request);
             byte[] hashValue = GetSha1(message);
 
             string hashString = string.Empty;
@@ -39,12 +41,12 @@ namespace WalletAPI.Service
             {
                 hashString += string.Format("{0:x2}", x);
             }
-
+            //_logger.LogInformation(hashString);
             return hashString;
         }
         private static byte[] GetSha1(byte[] message)
         {
-            var hashString = SHA1.Create();
+            var hashString = HMACSHA1.Create();
             return hashString.ComputeHash(message);
         }
         private Customer? GetCustomer(string userId)

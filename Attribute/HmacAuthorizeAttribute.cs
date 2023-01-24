@@ -17,13 +17,17 @@ namespace WalletAPI
     public class HmacAuthorizeFilter : IAuthorizationFilter 
     {
         private readonly IHmacValidation _hmacValidation;
-        public HmacAuthorizeFilter(IHmacValidation hmacValidation) 
-        { 
-            _hmacValidation= hmacValidation;
+        private readonly ILogger<HmacAuthorizeFilter> _logger;
+        public HmacAuthorizeFilter(IHmacValidation hmacValidation, ILogger<HmacAuthorizeFilter> logger)
+        {
+            _hmacValidation = hmacValidation;
+            _logger = logger;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            var request = ReadBodyAsString(context.HttpContext.Request);
+            _logger.LogInformation(request);
             if (!context.HttpContext.Request.Headers.ContainsKey("X-Digest") && !context.HttpContext.Request.Headers.ContainsKey("X-UserId"))
             {
                 context.Result = new UnauthorizedResult();
@@ -32,7 +36,6 @@ namespace WalletAPI
             {
                 context.HttpContext.Request.Headers.TryGetValue("X-Digest", out var headerDigestValue);
                 context.HttpContext.Request.Headers.TryGetValue("X-UserId", out var headerUserIdValue);
-                var request = ReadBodyAsString(context.HttpContext.Request);
                 var isValid = _hmacValidation.Validation(headerUserIdValue.ToString(), headerDigestValue.ToString(), request);
                 if (!isValid)
                 {
@@ -44,21 +47,15 @@ namespace WalletAPI
         }
         private string ReadBodyAsString(HttpRequest request)
         {
-            var initialBody = request.Body;
-            try
-            {
-                request.EnableBuffering();
+            request.EnableBuffering();
 
-                using (StreamReader reader = new (request.Body))
-                {
+            using (StreamReader reader = new (request.Body))
+            {
                     string text = reader.ReadToEnd();
                     return text;
-                }
             }
-            finally
-            {
-                request.Body = initialBody;
-            }
+            
+            
         }
 
     }

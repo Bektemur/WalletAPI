@@ -9,10 +9,12 @@ namespace WalletAPI.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly IWalletService _walletService;
-        public WalletController(ApplicationContext context, IWalletService walletService)
+        private readonly ILogger<WalletController> _logger;
+        public WalletController(ApplicationContext context, IWalletService walletService, ILogger<WalletController> logger)
         {
             _context = context;
-            _walletService= walletService;
+            _walletService = walletService;
+            _logger = logger;
         }
 
         [HmacAuthorize]
@@ -64,6 +66,7 @@ namespace WalletAPI.Controllers
             
         }
 
+        [HmacAuthorize]
         [HttpGet("GetBalance")]
         public IActionResult GetBalance(string account)
         {
@@ -72,7 +75,7 @@ namespace WalletAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(new Response() { IsSuccess = true, Message = accounts.Balance.ToString() });
+            return Ok(new Response() { IsSuccess = true, Message = "Баланс = " + accounts.Balance.ToString() });
         }
 
     }

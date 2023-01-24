@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 using WalletAPI.Interface;
 using WalletAPI.Model;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WalletAPI.Service
 {
@@ -39,12 +38,11 @@ namespace WalletAPI.Service
             {
                 hashString += string.Format("{0:x2}", x);
             }
-
             return hashString;
         }
         private static byte[] GetSha1(byte[] message)
         {
-            var hashString = SHA1.Create();
+            var hashString = HMACSHA1.Create();
             return hashString.ComputeHash(message);
         }
         private Customer? GetCustomer(string userId)
